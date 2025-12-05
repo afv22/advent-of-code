@@ -1,14 +1,14 @@
 from typing import List
+from solution import BaseSolution
 
 
-class Solution:
-    INPUT_FILE = "./input.txt"
-    EXAMPLE_FILE = "./example.txt"
+class Solution(BaseSolution):
 
-    def __init__(self) -> None:
+    def init(self) -> None:
         self.fresh_ranges: List[List[int]] = []
         self.ingredients: List[int] = []
-        with open(self.INPUT_FILE, "r") as f:
+
+        with open(self.filename, "r") as f:
             for line in f.readlines():
                 line = line.strip()
                 if "-" in line:
@@ -45,12 +45,5 @@ class Solution:
         return sum(high - low + 1 for low, high in ranges)
 
 
-def main() -> None:
-    s = Solution()
-
-    print("Stage 1:", s.stage1())
-    print("Stage 2:", s.stage2())
-
-
 if __name__ == "__main__":
-    main()
+    Solution.main()
