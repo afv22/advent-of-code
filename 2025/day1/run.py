@@ -1,42 +1,33 @@
 from typing import List
-
-INPUT_FILE = "./input.txt"
-
-
-def load_input() -> List[tuple[str, int]]:
-    with open(INPUT_FILE, "r") as f:
-        turns = [(turn[0], int(turn[1:])) for turn in f.readlines()]
-
-    return turns
+from solution import BaseSolution
 
 
-def stage1(turns: List[tuple[str, int]]) -> None:
-    dial, zeros = 50, 0
-    for direction, clicks in turns:
-        dial += clicks if direction == "R" else -clicks
-        dial %= 100
-        if dial == 0:
-            zeros += 1
-    print("Zeros:", zeros)
+class Solution(BaseSolution):
 
+    def init(self) -> None:
+        self.turns: List[tuple[str, int]] = []
+        with open(self.filename, "r") as f:
+            self.turns = [(turn[0], int(turn[1:])) for turn in f.readlines()]
 
-def stage2(turns: List[tuple[str, int]]) -> None:
-    dial, zeros = 50, 0
-    for direction, clicks in turns:
-        for _ in range(clicks):
-            dial += 1 if direction == "R" else -1
+    def stage1(self) -> int:
+        dial, zeros = 50, 0
+        for direction, clicks in self.turns:
+            dial += clicks if direction == "R" else -clicks
             dial %= 100
             if dial == 0:
                 zeros += 1
-    print("Zeros:", zeros)
+        return zeros
 
-
-def main() -> None:
-    turns = load_input()
-
-    stage1(turns)
-    stage2(turns)
+    def stage2(self) -> int:
+        dial, zeros = 50, 0
+        for direction, clicks in self.turns:
+            for _ in range(clicks):
+                dial += 1 if direction == "R" else -1
+                dial %= 100
+                if dial == 0:
+                    zeros += 1
+        return zeros
 
 
 if __name__ == "__main__":
-    main()
+    Solution.main()
