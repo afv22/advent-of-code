@@ -1,5 +1,4 @@
-from typing import List
-from solution import BaseSolution
+from aoc.base_solution import BaseSolution
 from aoc.io import IO
 
 

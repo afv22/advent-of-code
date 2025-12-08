@@ -1,6 +1,7 @@
 from collections import defaultdict
 from typing import Dict, List
-from solution import BaseSolution
+
+from aoc.base_solution import BaseSolution
 
 
 class Solution(BaseSolution):
@@ -26,7 +27,7 @@ class Solution(BaseSolution):
     def stage1(self) -> int:
         antennae = self._parse_antennae()
         antinodes: set[tuple[int, int]] = set()
-        
+
         for locations in antennae.values():
             for i, (x1, y1) in enumerate(locations, start=1):
                 for x2, y2 in locations[i:]:

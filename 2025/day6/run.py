@@ -1,6 +1,6 @@
-from typing import List
-from solution import BaseSolution
 from functools import reduce
+
+from aoc.base_solution import BaseSolution
 from aoc.io import IO
 
 

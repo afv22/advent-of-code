@@ -3,5 +3,4 @@ name = "advent-of-code"
 version = "0.1.0"
 
 [tool.setuptools]
-py-modules = ["solution"]
 packages = ["aoc"]

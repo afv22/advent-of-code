@@ -16,17 +16,15 @@ curl -b "session=$AOC_COOKIE" https://adventofcode.com/$year/day/$day/input > "$
 # Generate boilerplate script
 cat > "$year/day$day/run.py" << 'EOF'
 from typing import List
-from solution import BaseSolution
+
+from aoc.base_solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.lines: List = []
-        with open(self.filename, "r") as f:
-            for line in f.readlines():
-                line = line.strip()
-                self.lines.append(line)
+        self.lines = IO.load_lines(self.filename)
 
     def stage1(self) -> int: ...
     def stage2(self) -> int: ...
