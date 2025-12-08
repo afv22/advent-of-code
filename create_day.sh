@@ -15,8 +15,6 @@ curl -b "session=$AOC_COOKIE" https://adventofcode.com/$year/day/$day/input > "$
 
 # Generate boilerplate script
 cat > "$year/day$day/run.py" << 'EOF'
-from typing import List
-
 from aoc.base_solution import BaseSolution
 from aoc.io import IO
 
