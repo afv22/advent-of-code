@@ -8,6 +8,7 @@ class Solution(BaseSolution):
 
     def init(self) -> None:
         self.lines = IO.load_lines(self.filename)
+        self.grid = IO.load_matrix(self.filename)
 
     def stage1(self) -> int:
         lines = [line.split() for line in self.lines]
@@ -35,17 +36,15 @@ class Solution(BaseSolution):
                 return total + reduce(lambda x, y: x * y, curr_vals)
             return 0
 
-        for i in range(len(self.lines[0])):
-            column = [s[i] for s in self.lines]
-
+        for column in self.grid.cols:
             if all(c == " " for c in column):
                 total = new_total()
                 curr_vals = []
                 curr_op = None
             else:
-                if self.lines[-1][i] != " ":
-                    curr_op = self.lines[-1][i]
-                curr_vals.append(int("".join(line[i] for line in self.lines[:-1])))
+                if column[-1] != " ":
+                    curr_op = column[-1]
+                curr_vals.append(int("".join(column[:-1])))
 
         total = new_total()
         return total

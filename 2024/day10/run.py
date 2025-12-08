@@ -2,18 +2,18 @@ from collections import deque
 from typing import List
 
 from aoc.base_solution import BaseSolution
+from aoc.data_structures.matrix import VECTORS_4
 from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        lines = IO.load_lines(self.filename)
-        self.map: List[List[int]] = [[int(n) for n in line] for line in lines]
+        self.map = IO.load_matrix(self.filename, int)
 
     def _find_trailheads(self) -> List[tuple[int, int]]:
         trailheads = []
-        for i, row in enumerate(self.map):
+        for i, row in enumerate(self.map.rows):
             for j, col in enumerate(row):
                 if not col:
                     trailheads.append((i, j))
@@ -23,14 +23,10 @@ class Solution(BaseSolution):
     def _plan_next_steps(
         self, q: deque, row: int, col: int, next_altitude: int
     ) -> None:
-        if row > 0 and self.map[row - 1][col] == next_altitude:
-            q.append((next_altitude, (row - 1, col)))
-        if row < len(self.map) - 1 and self.map[row + 1][col] == next_altitude:
-            q.append((next_altitude, (row + 1, col)))
-        if col > 0 and self.map[row][col - 1] == next_altitude:
-            q.append((next_altitude, (row, col - 1)))
-        if col < len(self.map[0]) - 1 and self.map[row][col + 1] == next_altitude:
-            q.append((next_altitude, (row, col + 1)))
+        for row_delta, col_delta in VECTORS_4:
+            new_row, new_col = row + row_delta, col + col_delta
+            if self.map.is_valid(new_row, new_col) and self.map[new_row][new_col]:
+                q.append((next_altitude, (new_row, new_col)))
 
     def stage1(self) -> int:
         trailheads = self._find_trailheads()
