@@ -1,14 +1,14 @@
 from typing import List
 from solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
         self.map: List[List[bool]] = []
-        with open(self.filename, "r") as f:
-            for row in f.readlines():
-                self.map.append([c == "@" for c in row.strip()])
+        for row in IO.load_lines(self.filename):
+            self.map.append([c == "@" for c in row])
 
     def _is_accessible(self, row, col) -> bool:
         tally = 0

@@ -1,15 +1,13 @@
 from typing import List
 from solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
         self.ranges: List[tuple[int, int]] = []
-        with open(self.filename, "r") as f:
-            s = f.read().strip()
-
-        raw_ranges = s.split(",")
+        raw_ranges = IO.load_raw(self.filename).split(",")
         for rr in raw_ranges:
             low, high = rr.split("-")
             self.ranges.append((int(low), int(high)))

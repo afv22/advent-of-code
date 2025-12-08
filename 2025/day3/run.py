@@ -1,14 +1,11 @@
-from typing import List
 from solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.banks: List[str] = []
-        with open(self.filename, "r") as f:
-            for bank in f.readlines():
-                self.banks.append(bank.strip())
+        self.banks = IO.load_lines(self.filename)
 
     def stage1(self) -> int:
         total = 0

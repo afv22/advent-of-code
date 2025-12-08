@@ -1,13 +1,13 @@
 from typing import List
 from solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.turns: List[tuple[str, int]] = []
-        with open(self.filename, "r") as f:
-            self.turns = [(turn[0], int(turn[1:])) for turn in f.readlines()]
+        lines = IO.load_lines(self.filename)
+        self.turns = [(turn[0], int(turn[1:])) for turn in lines]
 
     def stage1(self) -> int:
         dial, zeros = 50, 0

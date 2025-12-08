@@ -1,16 +1,12 @@
-from typing import List
 from solution import BaseSolution
 from collections import defaultdict
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.lines: List[str] = []
-        with open(self.filename, "r") as f:
-            for line in f.readlines():
-                line = line.strip()
-                self.lines.append(line)
+        self.lines = IO.load_lines(self.filename)
 
     def stage1(self) -> int:
         beams = set([self.lines[0].index("S")])

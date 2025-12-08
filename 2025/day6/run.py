@@ -1,16 +1,13 @@
 from typing import List
 from solution import BaseSolution
 from functools import reduce
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.lines: List[str] = []
-        with open(self.filename, "r") as f:
-            for line in f.readlines():
-                line = line.strip("\n")
-                self.lines.append(line)
+        self.lines = IO.load_lines(self.filename)
 
     def stage1(self) -> int:
         lines = [line.split() for line in self.lines]
@@ -49,7 +46,7 @@ class Solution(BaseSolution):
                 if self.lines[-1][i] != " ":
                     curr_op = self.lines[-1][i]
                 curr_vals.append(int("".join(line[i] for line in self.lines[:-1])))
-            
+
         total = new_total()
         return total
 

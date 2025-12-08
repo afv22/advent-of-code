@@ -2,6 +2,7 @@ import math
 from collections import namedtuple
 from solution import BaseSolution
 from typing import List
+from aoc.io import IO
 
 Box = namedtuple("Box", ["x", "y", "z"])
 
@@ -45,10 +46,9 @@ class Solution(BaseSolution):
 
     def init(self) -> None:
         self.boxes: List[Box] = []
-        with open(self.filename, "r") as f:
-            for line in f.readlines():
-                x, y, z = line.strip().split(",")
-                self.boxes.append(Box(int(x), int(y), int(z)))
+        for line in IO.load_lines(self.filename):
+            x, y, z = line.split(",")
+            self.boxes.append(Box(int(x), int(y), int(z)))
 
     @staticmethod
     def _distance(a: Box, b: Box) -> float:

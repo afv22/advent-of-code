@@ -1,5 +1,6 @@
 from typing import List
 from solution import BaseSolution
+from aoc.io import IO
 
 
 class Solution(BaseSolution):
@@ -7,15 +8,12 @@ class Solution(BaseSolution):
     def init(self) -> None:
         self.fresh_ranges: List[List[int]] = []
         self.ingredients: List[int] = []
-
-        with open(self.filename, "r") as f:
-            for line in f.readlines():
-                line = line.strip()
-                if "-" in line:
-                    low, high = line.split("-")
-                    self.fresh_ranges.append([int(low), int(high)])
-                elif line:
-                    self.ingredients.append(int(line))
+        for line in IO.load_lines(self.filename):
+            if "-" in line:
+                low, high = line.split("-")
+                self.fresh_ranges.append([int(low), int(high)])
+            elif line:
+                self.ingredients.append(int(line))
 
     def _clean_ranges(self) -> list[List[int]]:
         fresh_ranges = sorted(self.fresh_ranges, key=lambda tpl: tpl[0])
