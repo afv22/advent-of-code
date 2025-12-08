@@ -1,5 +1,6 @@
 from typing import Iterator, List
 
+# Right, Down, Left, Up
 VECTORS_4 = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 VECTORS_8 = [(0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1)]
 
@@ -37,3 +38,6 @@ class Matrix:
         for r in range(self.n_rows):
             for c in range(self.n_cols):
                 yield (r, c)
+
+    def __str__(self) -> str:
+        return "\n".join("".join(str(c) for c in row) for row in self.rows)
