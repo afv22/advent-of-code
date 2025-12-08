@@ -30,3 +30,10 @@ class Matrix:
         """Returns a generator that yields each column in the matrix."""
         for i in range(self.n_cols):
             yield [row[i] for row in self.rows]
+
+    @property
+    def coordinates(self) -> Iterator[tuple[int, int]]:
+        """Returns a generator that yields each coordinate in the matrix."""
+        for r in range(self.n_rows):
+            for c in range(self.n_cols):
+                yield (r, c)
