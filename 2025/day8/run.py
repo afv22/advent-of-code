@@ -1,11 +1,44 @@
 import math
-import heapq
 from collections import namedtuple
-from functools import reduce
 from solution import BaseSolution
 from typing import List
 
 Box = namedtuple("Box", ["x", "y", "z"])
+
+
+class UnionFind:
+    """Union-Find (Disjoint Set Union) data structure with path compression and union by size."""
+
+    def __init__(self, n: int):
+        self.parent = list(range(n))
+        self.size = [1] * n
+
+    def find(self, x: int) -> int:
+        """Find the root of x with path compression."""
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x: int, y: int) -> None:
+        """Union two sets by size."""
+        root_x, root_y = self.find(x), self.find(y)
+        if root_x == root_y:
+            return
+
+        # Union by size: attach smaller tree to larger tree
+        if self.size[root_x] < self.size[root_y]:
+            root_x, root_y = root_y, root_x
+        self.parent[root_y] = root_x
+        self.size[root_x] += self.size[root_y]
+
+    def get_component_sizes(self) -> List[int]:
+        """Get sizes of all connected components."""
+        roots = {}
+        for i in range(len(self.parent)):
+            root = self.find(i)
+            if root not in roots:
+                roots[root] = self.size[root]
+        return list(roots.values())
 
 
 class Solution(BaseSolution):
@@ -19,81 +52,40 @@ class Solution(BaseSolution):
 
     @staticmethod
     def _distance(a: Box, b: Box) -> float:
-        return math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2)
+        """Calculate squared Euclidean distance (avoids sqrt for efficiency)."""
+        return (a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2
 
-    def _get_distance_heap(self) -> List[tuple[float, Box, Box]]:
-        distances: List[tuple[float, Box, Box]] = []
-        for i, a in enumerate(self.boxes):
-            for b in self.boxes[i + 1 :]:
-                heapq.heappush(distances, (self._distance(a, b), a, b))
-        return distances
-
-    def _connect_boxes(
-        self,
-        circuits: dict[int, set[Box]],
-        connected_boxes: dict[Box, int],
-        boxA: Box,
-        boxB: Box,
-        max_i: int,
-    ) -> int:
-        if (
-            boxA in connected_boxes
-            and boxB in connected_boxes
-            and connected_boxes[boxA] != connected_boxes[boxB]
-        ):
-            circuit_a = connected_boxes[boxA]
-            circuit_b = connected_boxes[boxB]
-            circuits[circuit_a].update(circuits[circuit_b])
-            for box in circuits[circuit_b]:
-                connected_boxes[box] = circuit_a
-            del circuits[circuit_b]
-
-        # If only one is in a circuit, connect the other
-        elif boxA in connected_boxes:
-            circuits[connected_boxes[boxA]].add(boxB)
-            connected_boxes[boxB] = connected_boxes[boxA]
-        elif boxB in connected_boxes:
-            circuits[connected_boxes[boxB]].add(boxA)
-            connected_boxes[boxA] = connected_boxes[boxB]
-
-        # If neither is in a circuit, create a new circuit
-        else:
-            max_i += 1
-            circuits[max_i] = set([boxA, boxB])
-            connected_boxes[boxA] = max_i
-            connected_boxes[boxB] = max_i
-
-        return max_i
+    def _get_sorted_distances(self) -> List[tuple[float, int, int]]:
+        """Build sorted list of all pairwise distances with box indices."""
+        distances = []
+        for i in range(len(self.boxes)):
+            for j in range(i + 1, len(self.boxes)):
+                distances.append((self._distance(self.boxes[i], self.boxes[j]), i, j))
+        return sorted(distances)
 
     def stage1(self) -> int:
-        distances = self._get_distance_heap()
-
-        circuits: dict[int, set[Box]] = {}
-        connected_boxes: dict[Box, int] = {}
-        max_i = 0
+        distances = self._get_sorted_distances()
+        uf = UnionFind(len(self.boxes))
 
         connection_limit = 10 if self.use_example else 1000
-        for _ in range(connection_limit):
-            _, boxA, boxB = heapq.heappop(distances)
-            max_i = self._connect_boxes(circuits, connected_boxes, boxA, boxB, max_i)
+        for _, box_i, box_j in distances[:connection_limit]:
+            uf.union(box_i, box_j)
 
-        circuit_sizes = [len(circuit) for circuit in circuits.values()]
-        return reduce(lambda x, y: x * y, sorted(circuit_sizes)[-3:])
+        circuit_sizes = uf.get_component_sizes()
+        return math.prod(sorted(circuit_sizes)[-3:])
 
     def stage2(self) -> int:
         n_boxes = 20 if self.use_example else 1000
-        distances = self._get_distance_heap()
+        distances = self._get_sorted_distances()
+        uf = UnionFind(len(self.boxes))
 
-        circuits: dict[int, set[Box]] = {}
-        connected_boxes: dict[Box, int] = {}
-        max_i = 0
+        for _, box_i, box_j in distances:
+            uf.union(box_i, box_j)
 
-        while True:
-            _, boxA, boxB = heapq.heappop(distances)
-            max_i = self._connect_boxes(circuits, connected_boxes, boxA, boxB, max_i)
-
-            if len(circuits) == 1 and len(list(circuits.values())[0]) == n_boxes:
-                return boxA.x * boxB.x
+            # Check if all boxes are in one component
+            if uf.size[uf.find(0)] == n_boxes:
+                return self.boxes[box_i].x * self.boxes[box_j].x
+        return -1
 
 
 if __name__ == "__main__":
