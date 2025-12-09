@@ -1,3 +1,4 @@
+from collections import deque
 from typing import Iterator, List
 
 # Right, Down, Left, Up
@@ -42,3 +43,26 @@ class Matrix:
 
     def __str__(self) -> str:
         return "\n".join("".join(str(c) for c in row) for row in self.rows)
+
+    def flood(self, starting_point: tuple[int, int], char: str | int) -> None:
+        """Flood a section of the grid with a given character."""
+        dq = deque([starting_point])
+        while dq:
+            row, col = dq.popleft()
+            if self.is_valid(row, col) and self[row][col] != char:
+                self[row][col] = char
+                dq.append((row - 1, col))
+                dq.append((row + 1, col))
+                dq.append((row, col - 1))
+                dq.append((row, col + 1))
+
+    def fill_range(
+        self, point1: tuple[int, int], point2: tuple[int, int], char: str | int
+    ) -> None:
+        (r1, c1), (r2, c2) = point1, point2
+        min_r, max_r = min(r1, r2), max(r1, r2)
+        min_c, max_c = min(c1, c2), max(c1, c2)
+        for r in range(min_r, max_r + 1):
+            for c in range(min_c, max_c + 1):
+                if self[r][c] != char:
+                    self[r][c] = char
