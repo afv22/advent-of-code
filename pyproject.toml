@@ -1,6 +1,11 @@
 [project]
 name = "advent-of-code"
 version = "0.1.0"
+dependencies = [
+    "numpy>=2.3.5",
+    "regex>=2025.11.3",
+    "scipy>=1.16.3",
+]
 
 [tool.setuptools]
 packages = ["aoc"]

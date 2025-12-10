@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional
 
 from aoc.base_solution import BaseSolution
