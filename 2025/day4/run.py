@@ -1,12 +1,11 @@
 from aoc.base_solution import BaseSolution
 from aoc.data_structures.matrix import VECTORS_8
-from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.map = IO.load_matrix(self.filename, lambda c: c == "@")
+        self.map = self.load_matrix(func=lambda c: c == "@")
 
     def _is_accessible(self, row, col) -> bool:
         tally = 0

@@ -1,11 +1,10 @@
 from aoc.base_solution import BaseSolution
-from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        lines = IO.load_lines(self.filename)
+        lines = self.load_lines()
         self.turns = [(turn[0], int(turn[1:])) for turn in lines]
 
     def stage1(self) -> int:

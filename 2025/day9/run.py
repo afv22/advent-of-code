@@ -2,14 +2,12 @@ from itertools import combinations
 
 from aoc.base_solution import BaseSolution
 from aoc.data_structures import CompressedMatrix
-from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        lines = IO.load_lines(self.filename)
-        pairs = [line.split(",") for line in lines]
+        pairs = [line.split(",") for line in self.load_lines()]
         self.tiles = [(int(row), int(col)) for col, row in pairs]
         self.matrix = CompressedMatrix(self.tiles)
 

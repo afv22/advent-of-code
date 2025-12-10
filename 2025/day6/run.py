@@ -1,14 +1,13 @@
 from functools import reduce
 
 from aoc.base_solution import BaseSolution
-from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.lines = IO.load_lines(self.filename)
-        self.grid = IO.load_matrix(self.filename)
+        self.lines = self.load_lines()
+        self.grid = self.load_matrix()
 
     def stage1(self) -> int:
         lines = [line.split() for line in self.lines]

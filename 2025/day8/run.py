@@ -4,7 +4,6 @@ from typing import List
 
 from aoc.base_solution import BaseSolution
 from aoc.data_structures import UnionFind
-from aoc.io import IO
 
 Box = namedtuple("Box", ["x", "y", "z"])
 
@@ -13,7 +12,7 @@ class Solution(BaseSolution):
 
     def init(self) -> None:
         self.boxes: List[Box] = []
-        for line in IO.load_lines(self.filename):
+        for line in self.load_lines():
             x, y, z = line.split(",")
             self.boxes.append(Box(int(x), int(y), int(z)))
 

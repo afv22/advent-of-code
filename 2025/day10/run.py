@@ -4,7 +4,6 @@ from collections import deque
 from typing import List, NamedTuple
 
 from aoc.base_solution import BaseSolution
-from aoc.io import IO
 
 
 class Machine(NamedTuple):
@@ -17,7 +16,7 @@ class Solution(BaseSolution):
 
     def init(self) -> None:
         self.machines: List[Machine] = []
-        for line in IO.load_lines(self.filename):
+        for line in self.load_lines():
             chunks = line.split(" ")
             lights = tuple(light == "#" for light in chunks[0].strip("[]"))
             buttons = []

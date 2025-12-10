@@ -1,13 +1,12 @@
 from collections import defaultdict
 
 from aoc.base_solution import BaseSolution
-from aoc.io import IO
 
 
 class Solution(BaseSolution):
 
     def init(self) -> None:
-        self.lines = IO.load_lines(self.filename)
+        self.lines = self.load_lines()
 
     def stage1(self) -> int:
         beams = set([self.lines[0].index("S")])
