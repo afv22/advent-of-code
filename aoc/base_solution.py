@@ -34,13 +34,16 @@ class BaseSolution(ABC):
     def stage2(self) -> int: ...
 
     @staticmethod
-    def _run_stage(stage: Callable, n: int) -> None:
+    def _run_stage(stage: Callable, n: int, quiet: bool) -> None:
         start_time = time.time()
 
         # Flag to stop the timer thread
         stop_timer = threading.Event()
 
         def update_timer():
+            if quiet:
+                return
+
             while not stop_timer.is_set():
                 elapsed = time.time() - start_time
                 sys.stdout.write(f"\rStarting Stage {n}... ({elapsed:.2f}s)")
@@ -71,20 +74,21 @@ class BaseSolution(ABC):
         parser.add_argument(
             "--real", action="store_true", help="Use input.txt instead of example.txt"
         )
+        parser.add_argument("--quiet", action="store_true", help="Suppress runtime")
         args = parser.parse_args()
 
         solution = cls(use_example=not args.real)
 
         year, day = Path.cwd().parts[-2:]
         print(f"Starting execution for Day {day[3:]}, {year}...")
-        cls._run_stage(solution.stage1, 1)
+        cls._run_stage(solution.stage1, 1, args.quiet)
 
         # Switch to second example file for stage 2 if configured
         if solution.use_example and cls.EXAMPLE_FILE_2 is not None:
             solution._current_example_file = cls.EXAMPLE_FILE_2
             solution.init()
 
-        cls._run_stage(solution.stage2, 2)
+        cls._run_stage(solution.stage2, 2, args.quiet)
         print()
 
     def load_lines(self) -> List[str]:
